@@ -1,7 +1,20 @@
-anarpy
+Anarpy - ANalysis And Replication in PYthon
 ==============================
 
-ANalysis And Replication in PYthon
+
+
+Prerequisites
+------------
+
+
+Installation
+------------
+
+
+Contributing
+------------
+
+
 
 Project Organization
 ------------
@@ -53,5 +66,15 @@ Project Organization
 
 
 --------
+
+
+License
+------------
+
+Citation
+------------
+
+Contact
+------------
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
