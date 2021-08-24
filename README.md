@@ -1,4 +1,6 @@
-AnarPy - ANalysis And Replication in PYthon
+ ![Flowers](./graphics/anarpy.png) 
+ 
+ AnarPy - ANalysis And Replication in PYthon
 ==============================
 
 AnarPy is a Python package to facilitate the simulation, analysis, and replication of several experiments using computational whole brain models.
