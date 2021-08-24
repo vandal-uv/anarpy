@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="anarpy",
-    version="0.1.2",
+    version="0.1.6",
     author="Valparaiso Neural Dynamics Laboratory",
     author_email="javier.palma@cinv.cl",
     description="Analysis and Replication in Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/vandal-uv/",
+    url="https://anarpy.readthedocs.io",
     project_urls={
         "Bug Tracker": "https://github.com/vandal-uv/anarpy/issues",
     },
@@ -22,5 +22,5 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src/"),
-    python_requires=">=3.9",
+    python_requires=">=3.6",
 )
