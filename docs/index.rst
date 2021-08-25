@@ -6,7 +6,6 @@
 Welcome to Anarpy's site!
 ==================================
 
-![AnarPy](../graphics/anarpy.png) 
 AnarPy (ANalysis And Replication in PYthon) is an open-source Python package to facilitate the simulation, and analysis of computational whole brain models. Additionally, AnarPy provides the tools for replicate the simulations and experiments performed by researchers.
 For more details, installation instructions, documentation, tutorials, forums, videos and more, please navigate throught this site.
 
