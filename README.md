@@ -1,3 +1,7 @@
+
+
+![anarpy](./graphics/anarpy-logo.png)
+
 AnarPy - ANalysis And Replication in PYthon
 ==============================
 
