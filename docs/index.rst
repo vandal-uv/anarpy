@@ -3,18 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Anarpy's documentation!
+Welcome to Anarpy's site!
 ==================================
+
+![AnarPy](../graphics/anarpy.png) 
+AnarPy (ANalysis And Replication in PYthon) is an open-source Python package to facilitate the simulation, and analysis of computational whole brain models. Additionally, AnarPy provides the tools for replicate the simulations and experiments performed by researchers.
+For more details, installation instructions, documentation, tutorials, forums, videos and more, please navigate throught this site.
+
+The AnarPy source code is available on `GitHub <https://github.com/jpalma-espinosa/anarpy>`_.
+
+This package is developed and maintained by the Valparaíso Neural Dynamics Laboratory at Universidad de Valparaíso (https://vandal-uv.github.io/)
+
+Table of Contents
+------------------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   
+   about
+   install
+   tutorial
+   reference
+   advanced
+   package_index
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
