@@ -10,11 +10,12 @@ import matplotlib.pyplot as plt
 from models import netEIF_EImix as eif
 
 # redefinimos el número de neuronas [Exc, Inh] en la red
-eif.N_i=[75,25]
+eif.N_i=[100,25]
+eif.Ioffset_i=[60,58]
 # Esta función reconstruye los vectores con parámetros
 eif.InitPars()
 # Calculamos matrices de conectividad aleatorias
-eif.InitCM(Pee=0.2, Pei=0.6, Pie=0.4, Pii=0.4)
+eif.InitCM(Pee=0.3, Pei=0.6, Pie=0.4, Pii=0.4)
 
 # Podemos usar la matriz que queramos definiendo las variables eif.CMe
 # (excitatorias) y eif.CMi (inhibitorias)
