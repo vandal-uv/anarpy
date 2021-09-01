@@ -20,6 +20,11 @@ C=200
 tau_exc=5; Eexc=0 
 tau_inh=20; Einh=-70
 
+# Input (noisy) current
+Ioffset=80 #media
+noise=2 #desviacion estandar del ruido
+
+
 # Main function
 @jit(float64[:,:](float64[:,:],float64[:]),nopython=True)
 def LIF(X,I):
@@ -59,8 +64,9 @@ Vreset_i=[-53, -54] #-58
 Vspk_i=0
 gL_i=[4.3, 2.9]# 6
 C_i=[104, 30] #200
+Ioffset_i = [80,40]
 
-Params=["Vr","DT","Vth","Vreset","Vspk","gL","C"]
+Params=["Vr","DT","Vth","Vreset","Vspk","gL","C","Ioffset"]
 """
 We will take the parameters as lists of lenght K (number of neuron
 types) and convert them to arrays of length N (number of neurons).
@@ -86,6 +92,8 @@ def InitPars():
     gL_i    Membrane (leak) conductance
     
     C_i     Membrane capacitance
+    
+    Ioffset_i     Mean inupt current
 
     These variables must exist either as a scalar or as a list of length K (number of neuron types)
 
@@ -99,7 +107,7 @@ def InitPars():
     None. The arrays of variables become available module-wide.
 
     """
-    global Vr,DT,Vth,Vreset,Vspk,gL,C
+    global Vr,DT,Vth,Vreset,Vspk,gL,C,Ioffset
     
     for param in Params:
         if type(eval(param+"_i"))==list:
@@ -108,7 +116,7 @@ def InitPars():
             else:
                 raise ValueError("check the length of variable"+param)
         else:
-            exec("%s = %s_i"%((param,)*2))
+            exec("%s = %s_i"%((param,)*2), globals())
     
 #NETWORK parameters    
 #Synaptic Parameters
@@ -160,10 +168,6 @@ def InitCM(Pee=0.4, Pei=0.6, Pie=0.8, Pii=0.4):
 
 #simulation parameters
 tstop=5000; dt=0.1
-
-# Input (noisy) current
-Ioffset=80 #media del estímulo
-noise=2 #desviacion estandar del ruido
 
 def InitVars(V0=-50):
     """
@@ -261,21 +265,21 @@ def runSim(X=None,recordV=False):
 
 def ParamsNeuron():    
     pardict={}
-    for var in ("Vr","DT","Vth","Vreset","Vspk","gL","C"):
+    for var in ("Vr","DT","Vth","Vreset","Vspk","gL","C",'Ioffset'):
         pardict[var]=eval(var)
         
     return pardict
 
 def ParamsNeuronByType():
     pardict={}
-    for var in ("Vr","DT","Vth","Vreset","Vspk","gL","C"):
+    for var in ("Vr","DT","Vth","Vreset","Vspk","gL","C",'Ioffset'):
         pardict[var]=eval(var+"_i")
         
     return pardict
 
 def ParamsNet():
     pardict={}
-    for var in ('N_i','N','tau_exc', 'Eexc', 'tau_inh', 'Einh', 'WsynE', 'WsynI', 'Ioffset', 'noise'):
+    for var in ('N_i','N','tau_exc', 'Eexc', 'tau_inh', 'Einh', 'WsynE', 'WsynI', 'noise'):
         pardict[var]=eval(var)
     return pardict
 
