@@ -19,5 +19,4 @@ Citation
 
 Contact
 ------------
-Code Mantainer: Javier Palma-Espinosa (javier.palma@cinv.cl)   
 Principal Investigator: Patricio Orio (patricio.orio@cinv.cl)
