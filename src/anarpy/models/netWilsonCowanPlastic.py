@@ -85,10 +85,10 @@ def SimAdapt(Init=None):
     Runs two deterministic simulations of timeTrans. 
     
     First with tau_ip=0.05
-    Second with tau_ip=tau_ip/2
+    Second with tau_ip=tau_ip/2 and noise if D>0
     """
 
-    global tau_ip, timeTrans
+    global tau_ip, timeTrans, sqdtD
     if Init is None:
         Var=np.array([E0,I0,a_ie_0])[:,None]*np.ones((1,N))
     else:
@@ -100,16 +100,21 @@ def SimAdapt(Init=None):
     tau_ip=0.05
     wilsonCowanDet.recompile()
     
-    # Varinit=np.zeros((len(timeTrans),3,N))
     for i,t in enumerate(timeTrans):
         # Varinit[i]=Var
         Var+=dtSim*wilsonCowanDet(t,Var)
       
     tau_ip=old_tau_ip/2
-    wilsonCowanDet.recompile()
     
-    for i,t in enumerate(timeTrans):
-        Var+=dtSim*wilsonCowanDet(t,Var)
+    if D==0:
+        wilsonCowanDet.recompile()
+        for i,t in enumerate(timeTrans):
+            Var+=dtSim*wilsonCowanDet(t,Var)
+    else:
+        sqdtD=D/np.sqrt(dtSim)
+        wilsonCowan.recompile()
+        for i,t in enumerate(timeTrans):
+            Var+=dtSim*wilsonCowan(t,Var)
     tau_ip=old_tau_ip
     
     return Var
