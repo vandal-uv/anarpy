@@ -16,6 +16,24 @@ from numpy import linalg as LA
 
 @njit
 def phaseFC(phase_T, cols=True):
+    """
+    Calculate a FC matrix based on phase synchrony
+
+    Parameters
+    ----------
+    phase_T : numpy array of floats in (0,1)
+        Phase in time for each node. If cols==True, the first axis (0) is time
+        and the second axis contains the nodes.
+    cols : Boolean, optional
+        The default is True.
+
+    Returns
+    -------
+    FCphase : 2D numpy array
+        NxN matrix containing the pair-wise phase synch values. N is the number 
+        of nodes (2nd dimension of phase_t if cols==True)
+
+    """
     if cols:
         # if series are in columns (time in rows)
         phase_T=phase_T.T
