@@ -8,8 +8,8 @@ The Huber_braun neuronal model function.
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
-from models import netwWilsonCowan as WC
-from utils import Networks
+import anarpy.models.netWilsonCowan as WC
+import anarpy.utils.Networks as Networks
 
 WC.tTrans=2  #transient removal (pre-simulation)
 WC.tstop=20   # actual simulation
@@ -21,7 +21,7 @@ WC.dt=0.002   # Sampling interval
 np.random.seed(15)
 nnodes=45
 WC.N=nnodes
-WC.CM=Networks.distCM(nnodes,P=0.25,rnd=0.10,symmetrical=False)
+WC.CM=Networks.distCM(nnodes,density=0.25,rnd=0.10,symmetrical=False)
 # The nodes are heterogeneous
 WC.P=np.random.uniform(0.35,0.5,nnodes)
 # P=.4
