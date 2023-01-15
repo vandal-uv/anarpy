@@ -149,7 +149,7 @@ def extract_FCD(data,wwidth=1000,maxNwindows=100,olap=0.9,coldata=False,
         of the time series inside the window.
     
     modeFCD : Measure to be employed to compare the FCs and build the FCD
-        "corr" : Pearson correlation.  
+        "corr" : Pearson correlation between FCs. Note that this is a similarity measure, not distance.  
         "angdist" : Angular distance, defined as the cosine between vectors.  
         "clarksondist" : Clarkson's angular distance.  
         "euclidean" : Euclidean (2-norm) distance betwen unfolded FCs.
@@ -227,7 +227,7 @@ def extract_FCD(data,wwidth=1000,maxNwindows=100,olap=0.9,coldata=False,
 
     if modeFCD == 'corr':
         CV_centered=corr_vectors - np.mean(corr_vectors,-1)[:,None]
-        FCD = 1 - np.abs(np.corrcoef(CV_centered))
+        FCD = np.abs(np.corrcoef(CV_centered))
     elif modeFCD == 'angdist':#angular distance
         for ii in range(L):
             for jj in range(ii):
