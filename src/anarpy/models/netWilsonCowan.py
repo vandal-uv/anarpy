@@ -15,9 +15,9 @@ warnings.simplefilter('ignore', category=NumbaPerformanceWarning)
 #Node parameters
 # Any of them can be redefined as a vector of length nnodes
 #excitatory connections
-a_ee=3.5; a_ie=2.5
+a_ee=3.5; a_ei=2.5
 #inhibitory connections
-a_ei=3.75; a_ii=0
+a_ie=3.75; a_ii=0
 #tau
 tauE=0.010; tauI=0.020  # Units: seconds
 #external input
@@ -46,14 +46,14 @@ def S(x):
 def wilsonCowan(t,X):
     E,I = X
     noise=np.random.normal(0,sqdtD,size=N)
-    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ie*I + G*np.dot(CM,E) + P + noise))/tauE,
-                     (-I + (1-rI*I)*S(a_ei*E - a_ii*I ))/tauI))
+    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ei*I + G*np.dot(CM,E) + P + noise))/tauE,
+                     (-I + (1-rI*I)*S(a_ie*E - a_ii*I ))/tauI))
 
 @jit(float64[:,:](float64,float64[:,:]),nopython=True)
 def wilsonCowanDet(t,X):
     E,I = X
-    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ie*I + G*np.dot(CM,E) + P))/tauE,
-                     (-I + (1-rI*I)*S(a_ei*E - a_ii*I ))/tauI))
+    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ei*I + G*np.dot(CM,E) + P))/tauE,
+                     (-I + (1-rI*I)*S(a_ie*E - a_ii*I ))/tauI))
 
 """
 The main function is starting from here          
@@ -64,7 +64,7 @@ I0=0.1
 
 ### Time units are seconds  ###
 tTrans=2
-tstop=10
+tstop=100
 dt=0.001    #interval for points storage
 dtSim=0.0001   #interval for simulation (ODE integration)
 downsamp=int(dt/dtSim)
@@ -78,7 +78,7 @@ downsamp=int(dt/dtSim)
 
 def SimAdapt(Init=None):
     """
-    Runs a deterministic simulation of timeTrans. 
+    Runs a simulation of timeTrans. 
     """
     global timeTrans
     if Init is None:
@@ -86,14 +86,17 @@ def SimAdapt(Init=None):
     else:
         Var=Init
     # generate the vector again in case variables have changed
-    timeTrans=np.arange(0,tTrans,dtSim)
-
-    wilsonCowanDet.recompile()
-    
-    # Varinit=np.zeros((len(timeTrans),3,N))
-    for i,t in enumerate(timeTrans):
-        # Varinit[i]=Var
-        Var+=dtSim*wilsonCowanDet(t,Var)
+    timeTrans=np.arange(0,tTrans,dtSim)    
+ 
+    if D==0:
+        wilsonCowanDet.recompile()
+        for i,t in enumerate(timeTrans):
+            Var+=dtSim*wilsonCowanDet(t,Var)
+    else:
+        sqdtD=D/np.sqrt(dtSim)
+        wilsonCowan.recompile()
+        for i,t in enumerate(timeTrans):
+            Var+=dtSim*wilsonCowan(t,Var)
     
     return Var
 
@@ -195,7 +198,7 @@ def Sim(Var0=None,verbose=False):
         
 def ParamsNode():
     pardict={}
-    for var in ('a_ee','a_ei','a_ie','a_ii','tauE','tauI',
+    for var in ('a_ee','a_ie','a_ei','a_ii','tauE','tauI',
                 'P','Q','rE','rI','mu','sigma'):
         pardict[var]=eval(var)
         
