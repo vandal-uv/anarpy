@@ -2,9 +2,10 @@ import numpy as np
 from numba import jit,float64,int64
 
 class EIF:
-    
+
+
     def __init__(self):
-        
+
         # Neuron Parameters
         self.Vr_i = [-65, -62]  # -70
         self.DT_i = [0.8, 3]  # 2
@@ -17,55 +18,71 @@ class EIF:
         self.noise = 2
 
         # Pre-initialize parameters
-        self.parlist = ["Vr", "DT", "Vth", "Vreset", "Vspk", "gL", "C", "Ioffset"]
-        self.Vr = None; self.DT = None; self.Vth = None; self.Vreset = None
-        self.Vspk = None; self.gL = None; self.C = None; self.Ioffset = None
-        
+        self.parlist = ["Vr", "DT", "Vth",
+                        "Vreset", "Vspk", "gL", "C", "Ioffset"]
+        self.Vr = None
+        self.DT = None
+        self.Vth = None
+        self.Vreset = None
+        self.Vspk = None
+        self.gL = None
+        self.C = None
+        self.Ioffset = None
+
         self.N_i = [16, 10]  # Number of neurons per neuron type (exc, inh)
-        self.Ne = self.N_i[0]; self.Ni = self.N_i[1]
+        self.Ne = self.N_i[0]
+        self.Ni = self.N_i[1]
         self.N = sum(self.N_i)   # Total number
 
         # Synaptic Parameters
-        self.tau_exc = 5; self.Eexc = 0 
-        self.tau_inh = 20; self.Einh = -70
+        self.tau_exc = 5
+        self.Eexc = 0
+        self.tau_inh = 20
+        self.Einh = -70
         # Synaptic Weights
-        self.WsynE = 0.2; self.WsynI = 0.3
+        self.WsynE = 0.2
+        self.WsynI = 0.3
         # Simulation parameters
-        self.tstop = 5000; self.dt = 0.1
+        self.tstop = 5000
+        self.dt = 0.1
 
         # Connectivity matrices
         self.CMe = np.zeros((self.N, self.N))
         self.CMi = np.zeros((self.N, self.N))
 
     def params_neuron(self):
-        params = {'Vr_i': self.Vr_i, 'DT_i': self.DT_i, 'Vth_i': self.Vth_i, 'Vreset_i': self.Vreset_i, 'Vspk_i': self.Vspk_i, 'gL_i': self.gL_i, 'C_i': self.C_i, 'Ioffset_i': self.Ioffset_i, 'N_i': self.N_i, 'N': self.N}
+        params = {'Vr_i': self.Vr_i, 'DT_i': self.DT_i, 'Vth_i': self.Vth_i, 'Vreset_i': self.Vreset_i, 'Vspk_i': self.Vspk_i,
+                  'gL_i': self.gL_i, 'C_i': self.C_i, 'Ioffset_i': self.Ioffset_i, 'N_i': self.N_i, 'N': self.N}
         return params
-    
+
     def params_syn(self):
         params = {'tau_exc': self.tau_exc, 'Eexc': self.Eexc, 'tau_inh': self.tau_inh, 'Einh': self.Einh, 'WsynE': self.WsynE, 'WsynI': self.WsynI}
         return params
-    
+
     def params_sim(self):
         params = {'tstop': self.tstop, 'dt': self.dt}
         return params
-    
+
     def set_params(self,params):
         for key, value in params.items():
             setattr(self, key, value)
-    
+
     def init_params(self):
         # Initialize parameters with correct N lenght values
         for par in self.parlist:
             if type(getattr(self, par+"_i")) == list:
                 if len(getattr(self, par+"_i")) == 1:
-                    setattr(self,par,np.ones(self.N)*getattr(self, par+"_i")[0]) 
+                    setattr(self, par, np.ones(self.N)
+                            * getattr(self, par+"_i")[0])
                 elif len(getattr(self, par+"_i")) == 2:
-                    setattr(self,par,np.concatenate((np.ones(self.N_i[0])*getattr(self, par+"_i")[0], np.ones(self.N_i[1])*getattr(self, par+"_i")[1]))) 
+                    setattr(self, par, np.concatenate((np.ones(
+                        self.N_i[0])*getattr(self, par+"_i")[0], np.ones(self.N_i[1])*getattr(self, par+"_i")[1])))
                 else:
-                    raise ValueError("The lenght of the parameter "+par+"_i is not valid")
+                    raise ValueError(
+                        "The lenght of the parameter "+par+"_i is not valid")
             else:
-                setattr(self,par,getattr(self, par+"_i"))
-    
+                setattr(self, par, getattr(self, par+"_i"))
+
     @staticmethod
     @jit(float64[:, :](float64[:, :], float64[:], float64[:], float64[:], \
                        float64[:], float64[:], float64[:],int64, int64,int64, int64), nopython=True)
@@ -78,7 +95,7 @@ class EIF:
     def LIFCall(self, X, I):
         """
         Network of Exponential-Integrate-and-Fire
-        
+
         Calculates the derivatives of voltage and synaptic conductances at a given time.
 
         Parameters
@@ -96,7 +113,6 @@ class EIF:
 
         """
         return self.LIF(X,I,self.Vr,self.DT,self.Vth,self.gL,self.C,self.tau_exc,self.Eexc,self.tau_inh,self.Einh)
-
 
 
     #the previous function as a method of the class EIF
@@ -202,46 +218,44 @@ class EIF:
                         else:
                             X[2] = X[2] + self.CMi[:, idx_i-self.Ne]
             return spikes, time
-    
 
-    
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import matplotlib.pyplot as plt
     eif = EIF()
     eif.init_params()
     eif.InitCM()
-    spikes,time,X_t = eif.runSim(eif.InitVars(),recordV=True)
+    spikes, time, X_t = eif.runSim(eif.InitVars(),recordV=True)
     print(eif.params_neuron())
     print(eif.params_syn())
     print(eif.params_sim())
     print(eif.InitVars())
 
     if len(spikes)>0:
-        spikes=np.array(spikes)
-        neuron,fRates=np.unique(spikes[:,0],return_counts=True)
-        fRates=fRates/(eif.tstop/1000)    
-    
+        spikes = np.array(spikes)
+        neuron, fRates=np.unique(spikes[:,0],return_counts=True)
+        fRates = fRates/(eif.tstop/1000)    
+
     plt.figure(1,figsize=(12,6))
     plt.clf()
-    if len(spikes)>0:
+    if len(spikes) > 0:
         plt.subplot(231)
-        plt.plot(spikes[:,1],spikes[:,0],'.',ms=1)
-        plt.xlim((0,eif.tstop))
+        plt.plot(spikes[:, 1],spikes[:,0],'.',ms=1)
+        plt.xlim((0, eif.tstop))
     plt.subplot(232)
-    plt.plot(time[::10],X_t[::10,0,:eif.Ne],'g')
-    plt.plot(time[::10],X_t[::10,0,eif.Ne:],'r')
+    plt.plot(time[::10],X_t[::10, 0,:eif.Ne], 'g')
+    plt.plot(time[::10],X_t[::10, 0,eif.Ne:], 'r')
     plt.subplot(233)
-    plt.plot(time[::10],X_t[::10,1,:eif.Ne],'g')
-    plt.plot(time[::10],X_t[::10,1,eif.Ne:],'r')
+    plt.plot(time[::10],X_t[::10, 1,:eif.Ne], 'g')
+    plt.plot(time[::10],X_t[::10, 1,eif.Ne:], 'r')
     plt.subplot(235)
-    plt.plot(time[::10],X_t[::10,2,:eif.Ne],'g')
-    plt.plot(time[::10],X_t[::10,2,eif.Ne:],'r')
+    plt.plot(time[::10],X_t[::10, 2,:eif.Ne], 'g')
+    plt.plot(time[::10],X_t[::10, 2,eif.Ne:], 'r')
 
-    
     plt.subplot(234)
-    maxV=np.max(np.abs(np.c_[eif.CMe,eif.CMi]))
-    plt.imshow(np.c_[eif.CMe*1,eif.CMi*-1],cmap='bwr',vmin=-maxV,vmax=maxV)
+    maxV = np.max(np.abs(np.c_[eif.CMe, eif.CMi]))
+    plt.imshow(np.c_[eif.CMe*1, eif.CMi*-1], cmap='bwr', vmin=-maxV, vmax=maxV)
     plt.colorbar()
-    
+
     plt.tight_layout()
     plt.savefig('EIF.png')
