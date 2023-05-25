@@ -82,11 +82,12 @@ class HuberBraun():
         
         return y0
     
+    #@jit(float64[:, :](float64[:, :], float64, float64, float64, float64, float64[:], float64, float64, float64, \
+    #                   float64, float64, float64[:], float64, float64, float64, float64, float64, float64, \
+    #                   float64, float64, float64, float64, float64, float64, float64, float64, int64[:,:], float64, \
+    #                   int32, float64, float64, float64, float64, float64, float64), nopython=True)
     @staticmethod
-    @jit(float64[:, :](float64[:, :], float64, float64, float64, float64, float64[:], float64, float64, float64, \
-                       float64, float64, float64[:], float64, float64, float64, float64, float64, float64, \
-                       float64, float64, float64, float64, float64, float64, float64, float64, int64[:,:], float64, \
-                       int32, float64, float64, float64, float64, float64, float64), nopython=True)
+    @jit(nopython=True)
     def HyB(y, t, zd, V0d, rho, gsd, Ed, gd, gr, gsr, Er, gh, Eh, gl, El, zr, V0r, zsd, V0sd, tsd, eta, \
             kappa, tsr, phi, tr, Nsr, CM, Ggj, nnodes, th, Nh,zh,V0h,Nsd, runInt):
         v = y[0, :]

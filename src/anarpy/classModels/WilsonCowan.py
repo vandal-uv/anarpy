@@ -15,9 +15,9 @@ class WilsonCowan:
         # Any of them can be redefined as a vector of length nnodes
         # excitatory connections
         self.a_ee = 3.5
-        self.a_ie = 2.5
+        self.a_ei = 2.5
         # inhibitory connections
-        self.a_ei = 3.75
+        self.a_ie = 3.75
         self.a_ii = 0
         # tau
         self.tauE = 0.010  # Units: seconds
@@ -42,7 +42,7 @@ class WilsonCowan:
         self.I0=0.1
         # Time units are seconds
         self.tTrans=2
-        self.tstop=10
+        self.tstop=100
         self.dt=0.001       #interval for points storage
         self.dtSim=0.0001   #interval for simulation (ODE integration)
         self.downsamp=int(self.dt/self.dtSim)
@@ -51,33 +51,33 @@ class WilsonCowan:
     @staticmethod
     @jit(float64[:, :](float64, float64[:, :], float64[:, :], float64, int32, float64, \
                 float64, float64, float64, float64, float64, float64, float64, float64, float64, float64, float64), nopython=True)
-    def wilsonCowan(t, X, CM, sqdtD, N, G, P, tauE, tauI, a_ee, a_ie, a_ei, a_ii, rE, rI, mu, sigma):
+    def wilsonCowan(t, X, CM, sqdtD, N, G, P, tauE, tauI, a_ee, a_ei, a_ie, a_ii, rE, rI, mu, sigma):
         E, I = X
         noise = np.random.normal(0, sqdtD, size=N)
-        return np.vstack(((-E + (1 - rE * E) * S(a_ee * E - a_ie * I + G * np.dot(CM, E) + P + noise, mu, sigma)) / tauE,
-                    (-I + (1 - rI * I) * S(a_ei * E - a_ii * I, mu, sigma)) / tauI))
+        return np.vstack(((-E + (1 - rE * E) * S(a_ee * E - a_ei * I + G * np.dot(CM, E) + P + noise, mu, sigma)) / tauE,
+                    (-I + (1 - rI * I) * S(a_ie * E - a_ii * I, mu, sigma)) / tauI))
 
     def wilsonCowanCall(self, t, X):
         return self.wilsonCowan(t, X, self.CM, self.sqdtD, self.N, self.G, self.P, self.tauE, self.tauI, 
-                                self.a_ee, self.a_ie, self.a_ei, self.a_ii, self.rE, self.rI, self.mu, self.sigma)
+                                self.a_ee, self.a_ei, self.a_ie, self.a_ii, self.rE, self.rI, self.mu, self.sigma)
     
 
     @staticmethod
     @jit(float64[:, :](float64, float64[:, :], float64[:, :], float64, float64, float64, float64, float64, float64, float64, float64[:], \
                        float64, float64, float64, float64), nopython=True)
-    def wilsonCowanDet(t, X, CM, G, a_ee, a_ie, a_ei, a_ii, tauE, tauI, P, rE, rI, mu, sigma):
+    def wilsonCowanDet(t, X, CM, G, a_ee, a_ei, a_ie, a_ii, tauE, tauI, P, rE, rI, mu, sigma):
         E, I = X
-        return np.vstack(((-E + (1 - rE * E) * S(a_ee * E - a_ie * I + G * np.dot(CM,E) + P, mu, sigma)) / tauE,
-                        (-I + (1 - rI * I) * S(a_ei * E - a_ii * I, mu, sigma)) / tauI))
+        return np.vstack(((-E + (1 - rE * E) * S(a_ee * E - a_ei * I + G * np.dot(CM,E) + P, mu, sigma)) / tauE,
+                        (-I + (1 - rI * I) * S(a_ie * E - a_ii * I, mu, sigma)) / tauI))
 
     def wilsonCowanDetCall(self, t, X):
-        return self.wilsonCowanDet(t, X, self.CM, self.G, self.a_ee, self.a_ie, self.a_ei, self.a_ii, self.tauE, self.tauI, 
+        return self.wilsonCowanDet(t, X, self.CM, self.G, self.a_ee, self.a_ei, self.a_ie, self.a_ii, self.tauE, self.tauI, 
                                    self.P, self.rE, self.rI, self.mu, self.sigma)
 
 
     def sim_adapt(self, Init=None):
         """
-        Runs a deterministic simulation of timeTrans.
+        Runs a simulation of timeTrans.
         """
         if Init is None:
             Var = np.array([self.E0, self.I0])[:, None] * np.ones((1,self.N))
@@ -86,8 +86,13 @@ class WilsonCowan:
         # Generate the vector again in case variables have changed
         timeTrans = np.arange(0, self.tTrans, self.dtSim)
 
-        for _, t in enumerate(timeTrans):
-            Var += self.dtSim * self.wilsonCowanDetCall(t, Var)
+        if self.D == 0:
+            for _, t in enumerate(timeTrans):
+                Var += self.dtSim * self.wilsonCowanDetCall(t, Var)
+        else:
+            sqdtD = self.D/np.sqrt(self.dtSim)
+            for _, t in enumerate(timeTrans):
+                Var += self.dtSim * self.wilsonCowanCall(t, Var)
 
         return Var
 
@@ -184,8 +189,8 @@ class WilsonCowan:
         # Returns a dictionary with the parameters of the model
         pardict = {
             'a_ee': self.a_ee,
-            'a_ei': self.a_ei,
             'a_ie': self.a_ie,
+            'a_ei': self.a_ei,
             'a_ii': self.a_ii,
             'tauE': self.tauE,
             'tauI': self.tauI,
