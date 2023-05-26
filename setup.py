@@ -23,7 +23,8 @@ setuptools.setup(
     install_requires=[
           'numpy',
           'numba',
-          'scipy'
+          'scipy',
+          'matplotlib'   
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
