@@ -10,8 +10,24 @@ import numpy as np
 #import seaborn as sns ## is used to plot some of the results
 #import pandas as pd ## pandas has a function to make the correlation between multiple time series
 import matplotlib.pylab as plt
+from numba import njit
 
 from numpy import linalg as LA
+
+@njit
+def phaseFC(phase_T, cols=True):
+    if cols:
+        # if series are in columns (time in rows)
+        phase_T=phase_T.T
+
+    nnodes=phase_T.shape[0]
+    
+    FCphase=np.zeros((nnodes,nnodes))
+    for ii in range(nnodes):
+        for jj in range(ii):
+            FCphase[ii,jj]=np.mean(np.abs((np.exp(1j*phase_T[ii])+np.exp(1j*phase_T[jj]))/2))
+    FCphase = FCphase + FCphase.T + np.identity(nnodes)
+    return FCphase
 
 def ccorrcoef(alpha1, alpha2, axis=None):
     """
@@ -156,10 +172,8 @@ def extract_FCD(data,wwidth=1000,maxNwindows=100,olap=0.9,coldata=False,
         if mode=='corr':
             corr_mat = np.corrcoef(aux_s) 
         elif mode=='psync':
-            corr_mat=np.mean(np.abs((np.exp(1j*aux_s[:,None,:])+np.exp(1j*aux_s[None,:,:]))/2),-1)
-            # for ii in range(nnodes):
-            #     for jj in range(ii):
-            #         corr_mat[ii,jj]=np.mean(np.abs(np.mean(np.exp(1j*aux_s[[ii,jj],:]),0)))
+            # corr_mat=np.mean(np.abs((np.exp(1j*aux_s[:,None,:])+np.exp(1j*aux_s[None,:,:]))/2),-1)
+            corr_mat=phaseFC(aux_s, cols=False)
         elif mode=='pcoher': #PLV phase locking value
             corr_mat=np.zeros((nnodes,nnodes))
             for ii in range(nnodes):
