@@ -2,6 +2,7 @@ import numpy as np
 from numba import jit,float64,int32,int64
 
 class HuberBraun():
+    """Huber-Braun model."""
     
     def __init__(self):
         # Node parameters
