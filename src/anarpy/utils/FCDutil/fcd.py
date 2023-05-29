@@ -16,6 +16,24 @@ from numpy import linalg as LA
 
 @njit
 def phaseFC(phase_T, cols=True):
+    """
+    Calculate a FC matrix based on phase synchrony
+
+    Parameters
+    ----------
+    phase_T : numpy array of floats in (0,1)
+        Phase in time for each node. If cols==True, the first axis (0) is time
+        and the second axis contains the nodes.
+    cols : Boolean, optional
+        The default is True.
+
+    Returns
+    -------
+    FCphase : 2D numpy array
+        NxN matrix containing the pair-wise phase synch values. N is the number 
+        of nodes (2nd dimension of phase_t if cols==True)
+
+    """
     if cols:
         # if series are in columns (time in rows)
         phase_T=phase_T.T
@@ -131,7 +149,7 @@ def extract_FCD(data,wwidth=1000,maxNwindows=100,olap=0.9,coldata=False,
         of the time series inside the window.
     
     modeFCD : Measure to be employed to compare the FCs and build the FCD
-        "corr" : Pearson correlation.  
+        "corr" : Pearson correlation between FCs. Note that this is a similarity measure, not distance.  
         "angdist" : Angular distance, defined as the cosine between vectors.  
         "clarksondist" : Clarkson's angular distance.  
         "euclidean" : Euclidean (2-norm) distance betwen unfolded FCs.
@@ -209,7 +227,7 @@ def extract_FCD(data,wwidth=1000,maxNwindows=100,olap=0.9,coldata=False,
 
     if modeFCD == 'corr':
         CV_centered=corr_vectors - np.mean(corr_vectors,-1)[:,None]
-        FCD = 1 - np.abs(np.corrcoef(CV_centered))
+        FCD = np.abs(np.corrcoef(CV_centered))
     elif modeFCD == 'angdist':#angular distance
         for ii in range(L):
             for jj in range(ii):

@@ -15,9 +15,9 @@ warnings.simplefilter('ignore', category=NumbaPerformanceWarning)
 #Node parameters
 # Any of them can be redefined as a vector of length nnodes
 #excitatory connections
-a_ee=3.5; a_ie_0=2.5
+a_ee=3.5; a_ei_0=2.5
 #inhibitory connections
-a_ei=3.75; a_ii=0
+a_ie=3.75; a_ii=0
 #tau
 tauE=0.010; tauI=0.020  # Units: seconds
 #external input
@@ -46,17 +46,17 @@ def S(x):
 
 @jit(float64[:,:](float64,float64[:,:]),nopython=True)
 def wilsonCowan(t,X):
-    E,I,a_ie = X
+    E,I,a_ei = X
     noise=np.random.normal(0,sqdtD,size=N)
-    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ie*I + G*np.dot(CM,E) + P + noise))/tauE,
-                     (-I + (1-rI*I)*S(a_ei*E - a_ii*I ))/tauI,
+    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ei*I + G*np.dot(CM,E) + P + noise))/tauE,
+                     (-I + (1-rI*I)*S(a_ie*E - a_ii*I ))/tauI,
                      (I*(E-rhoE))/tau_ip))
 
 @jit(float64[:,:](float64,float64[:,:]),nopython=True)
 def wilsonCowanDet(t,X):
-    E,I,a_ie = X
-    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ie*I + G*np.dot(CM,E) + P))/tauE,
-                     (-I + (1-rI*I)*S(a_ei*E - a_ii*I ))/tauI,
+    E,I,a_ei = X
+    return np.vstack(((-E + (1-rE*E)*S(a_ee*E - a_ei*I + G*np.dot(CM,E) + P))/tauE,
+                     (-I + (1-rI*I)*S(a_ie*E - a_ii*I ))/tauI,
                      (I*(E-rhoE))/tau_ip))
 
 """
@@ -90,7 +90,7 @@ def SimAdapt(Init=None):
 
     global tau_ip, timeTrans, sqdtD
     if Init is None:
-        Var=np.array([E0,I0,a_ie_0])[:,None]*np.ones((1,N))
+        Var=np.array([E0,I0,a_ei_0])[:,None]*np.ones((1,N))
     else:
         Var=Init
     # generate the vector again in case variables have changed
@@ -217,7 +217,7 @@ def Sim(Var0=None,verbose=False):
         
 def ParamsNode():
     pardict={}
-    for var in ('a_ee','a_ei','a_ii','tauE','tauI',
+    for var in ('a_ee','a_ie','a_ii','tauE','tauI',
                 'P','Q','rhoE','tau_ip','rE','rI','mu','sigma'):
         pardict[var]=eval(var)
         

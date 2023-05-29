@@ -37,7 +37,8 @@ def FCcluster(FCs,Distance='PCA',npcs=5,varexp=0.6,dc=0.05,minDist=0,minmax=[0,1
     Distance : 'PCA' or MxM matrix (M=number of FCs)
         If 'PCA' or not given, a PCA reduction of the FCs will be performed and the
         euclidean distance between the first npcs components will be used (default method).
-        Otherwise, an arbitrary distance matrix can be given.
+        Otherwise, an arbitrary distance matrix can be given. Note that if you want to use
+        a correlation matrix, you have to use 1-corr to have a distance.
 
     npcs : integer
         Number of principal components to consider for clustering and Data projection.

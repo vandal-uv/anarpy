@@ -192,8 +192,9 @@ def SW(N,M=None,density=0.2,Prw=0,directed=False,symmetrical=True,diag=None,seed
     
     return CM
 
-def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, directed=False, rand_Nintra=0,
-               symmetrical_inter=True, symmetrical_intra=True, diag=False, seed=None):
+def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, rand_Nintra=0, sw_intra = 1,
+               directed=False, symmetrical_inter=True, symmetrical_intra=True,
+               diag=False, seed=None):
     """
     Modular Network.
     
@@ -213,13 +214,17 @@ def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, directed=False, rand_Nint
     P_inter : float, optional
         Probability or density of inter-module connections. Must be between 0
         and density. The default is 0.01.
-    directed : Boolean, optional
-        if True, inter-module connections are established only to one side 
-        of the diagonal. Default = False
     rand_Nintra : float, optional.  0 <= rand <= 1
         Random factor of module sizes. If 0, all modules will be (mostly) the
         same size. If 1, module sizes will be random between 0.5 and 1.5 times the
         average size.
+    sw_intra : float, optional. 0 <= sw_intra <=1
+        Small-world parameter for intra-module connections. If sw_intra==1 (Default),
+        modules are completely random. If 0, modules have a lattice structure.
+        With values between 0.01 and 0.1, modules will have small-world architecture.
+    directed : Boolean, optional
+        if True, inter-module connections are established only to one side 
+        of the diagonal. Default = False
     symmetrical_inter : Boolean, optional
         if True, CM[i,j]=CM[j,i] for connections outside modules. Note that 
         symmetrical_inter cannot be True if directed is True. Default = True.
@@ -253,6 +258,9 @@ def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, directed=False, rand_Nint
     if symmetrical_inter and directed:
         print("Warning: symmetrical_inter and directed cannot be True at the same time. Setting symmetrical_inter to False.")
         symmetrical_inter = False
+        
+    if sw_intra<0 or sw_intra>1:
+        raise ValueError("sw_intra must be between 0 and 1")
 
     rng = np.random.default_rng(seed)
     avgN = N//N_mod
@@ -287,7 +295,10 @@ def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, directed=False, rand_Nint
     
     for i,Ni in enumerate(N_intra):
         ii,jj = start_indices[i],end_indices[i]
-        CMintra[ii:jj,ii:jj]=rng.binomial(1,P_intra,size=(Ni,Ni))
+        if sw_intra==1:
+            CMintra[ii:jj,ii:jj]=rng.binomial(1,P_intra,size=(Ni,Ni))
+        else:
+            CMintra[ii:jj,ii:jj]=SW(Ni, density=P_intra, Prw=sw_intra)
     if symmetrical_intra:
         CMintra[np.tril_indices(N)]=0
         CMintra += CMintra.T
@@ -333,7 +344,7 @@ def ModularNet(N, N_mod=4, density=0.08, P_inter=0.01, directed=False, rand_Nint
     return CM
 
 def HierModularNet(N, N_mod=16, density=0.05, rand_Nintra=0.5, N_inter=20,
-                    dNinter=0.6, rand_inter=0, directed = False, 
+                    dNinter=0.6, rand_inter=0, sw_intra = 1, directed = False, 
                     symmetrical_inter = False, inter_hubs=True, seed=None ):
     """
     Build a modular network with hierarchical inter-module connections
@@ -360,6 +371,10 @@ def HierModularNet(N, N_mod=16, density=0.05, rand_Nintra=0.5, N_inter=20,
     rand_inter : float, optional
         If greater than 0, a number of unspecific (random) inter-module 
         connections will be added. The default is 0.
+    sw_intra : float, optional. 0 <= sw_intra <=1
+        Small-world parameter for intra-module connections. If sw_intra==1 (Default),
+        modules are completely random. If 0, modules have a lattice structure.
+        With values between 0.01 and 0.1, modules will have small-world architecture.
     directed : Boolean, optional
         if True, inter-module connections are established only to one side 
         of the diagonal. Default = False
@@ -393,6 +408,8 @@ def HierModularNet(N, N_mod=16, density=0.05, rand_Nintra=0.5, N_inter=20,
         raise ValueError(f"density too high for the given number of modules. Try a value lower than {1/N_mod:0.3g}")
     if N_mod%2 != 0:
         raise ValueError("Number of modules must be even")
+    if sw_intra<0 or sw_intra>1:
+        raise ValueError("sw_intra must be between 0 and 1")
     
     rng = np.random.default_rng(seed)
     avgN = N//N_mod
@@ -427,7 +444,10 @@ def HierModularNet(N, N_mod=16, density=0.05, rand_Nintra=0.5, N_inter=20,
     
     for i,Ni in enumerate(N_intra):
         ii,jj = start_indices[i],end_indices[i]
-        CMintra[ii:jj,ii:jj]=rng.binomial(1,P_intra,size=(Ni,Ni))
+        if sw_intra==1:
+            CMintra[ii:jj,ii:jj]=rng.binomial(1,P_intra,size=(Ni,Ni))
+        else:
+            CMintra[ii:jj,ii:jj]=SW(Ni, density=P_intra, Prw=sw_intra)
     CMintra[np.diag_indices(N)]=0
     CMintra[np.tril_indices(N)]=0
     CMintra += CMintra.T
@@ -584,10 +604,10 @@ if __name__=="__main__":
     plt.tight_layout()
     
     #%%
-    CM_mod1=ModularNet(260, N_mod=8)
+    CM_mod1=ModularNet(260, N_mod=8, sw_intra= 0.05, P_inter=0.02)
     CM_mod2=ModularNet(260, N_mod=8, directed=True)
     CM_mod3=ModularNet(260, N_mod=8, symmetrical_inter=False)
-    CM_mod4=ModularNet(260, N_mod=8, symmetrical_intra=False)
+    CM_mod4=HierModularNet(260, N_mod=8, sw_intra=0.05)
     
     plt.figure(2)
     plt.clf()
