@@ -24,7 +24,9 @@ setuptools.setup(
           'numpy',
           'numba',
           'scipy',
-          'matplotlib'   
+          'matplotlib',
+          'scikit-learn',
+          'statsmodels'
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
