@@ -7,7 +7,7 @@ Created on Mon Oct  8 21:37:23 2018
 
 import numpy as np
 import matplotlib.pyplot as plt
-from models import netEIF_EImix as eif
+import anarpy.models.netEIF_EImix as eif
 
 # redefinimos el número de neuronas [Exc, Inh] en la red
 eif.N_i=[100,25]
