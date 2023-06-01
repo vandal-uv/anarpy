@@ -167,7 +167,7 @@ class WilsonCowan:
                 if i % self.downsamp == 0:
                     Y_t[i // self.downsamp] = Var
                 if t % 10 == 0:
-                    print("%g of %g ms" % (t, self.tstop))
+                    print("%g of %g s" % (t, self.tstop))
                 Var += self.dtSim * self.wilsonCowanCall(t, Var)
 
         if not verbose and self.D == 0:
