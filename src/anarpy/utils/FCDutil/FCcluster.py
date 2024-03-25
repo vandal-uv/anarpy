@@ -15,6 +15,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from sklearn.cluster import KMeans
+from sklearn import metrics
 
 from . import dclus
 from scipy.spatial import distance

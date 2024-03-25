@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="anarpy",
-    version="0.2.0",
+    version="0.3.0",
     author="Valparaiso Neural Dynamics Laboratory",
     author_email="javier.palma@cinv.cl",
     description="Analysis and Replication in Python",
