@@ -13,6 +13,7 @@ The AnarPy source code is available on `GitHub <https://github.com/jpalma-espino
 
 This package is developed and maintained by the Valparaíso Neural Dynamics Laboratory at Universidad de Valparaíso (https://vandal-uv.github.io/)
 
+
 Table of Contents
 ------------------
 
@@ -25,5 +26,13 @@ Table of Contents
    reference
    advanced
    package_index
+
+
+.. .. automodule:: classModels.HuberBraun
+    :members:
+
+
+.. .. automodule:: classModels.EIF
+    :members:
 
 

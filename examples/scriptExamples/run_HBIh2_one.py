@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
 import time as TM
-from models import netwHBIh2 as HB
-from utils import Networks
+import anarpy.models.netHBIh2 as HB
+import anarpy.utils.Networks as Networks
 
 Area = 15000 # um^2
 
@@ -20,7 +20,7 @@ HB.Area=Area
 #Seteo de variables gsd,gsr y numero de nodos
 nnodes=35
 HB.nnodes=nnodes
-HB.CM=Networks.distCM(nnodes,P=0.1,rnd=0.1)
+HB.CM=Networks.distCM(nnodes,density=0.1,rnd=0.1)
 
 HB.gsd=np.random.uniform(0.18,0.23,size=nnodes)
 HB.gsr=np.random.uniform(0.2,0.26,size=nnodes)
