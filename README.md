@@ -20,3 +20,6 @@ Citation
 Contact
 ------------
 Principal Investigator: Patricio Orio (patricio.orio@cinv.cl)
+Maintainers: 
+      Javier Palma-Espinosa (javier.palma@cinv.cl)
+      Ignacio Ampuero (ignacio.ampuero@uv.cl)
