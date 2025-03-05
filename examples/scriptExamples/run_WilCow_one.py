@@ -8,23 +8,25 @@ The Huber_braun neuronal model function.
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
-from models import netwWilsonCowanPlastic as WC
-from utils import Networks
+import anarpy.models.netWilsonCowan as WC
+import anarpy.utils.Networks as Networks
 
-WC.tTrans=25  #transient removal with accelerated plasticity
+WC.tTrans=2  #transient removal (pre-simulation)
 WC.tstop=20   # actual simulation
-WC.G=0.08    #Connectivity strength
+WC.G=0.05    #Connectivity strength
 WC.D=0.002        #noise factor
-WC.rhoE=0.14     #target value for mean excitatory activation
 WC.dt=0.002   # Sampling interval
+# Note that WC.dtSim is the time interval for numerical solution
 
 np.random.seed(15)
 nnodes=45
 WC.N=nnodes
-WC.CM=Networks.distCM(nnodes,P=0.25,rnd=0.10,symmetrical=False)
-WC.P=np.random.uniform(0.3,0.5,nnodes)
+WC.CM=Networks.distCM(nnodes,density=0.25,rnd=0.10,symmetrical=False)
+# The nodes are heterogeneous
+WC.P=np.random.uniform(0.35,0.5,nnodes)
 # P=.4
 
+# This line runs the simulation!! The following is analysis and plotting
 Vtrace,time=WC.Sim(verbose=True)
 #%%    
 
@@ -51,10 +53,10 @@ plt.subplot(321)
 plt.plot(time,Vtrace[:,0,::4])
 plt.ylabel('E')
 
-plt.subplot(323)
-plt.plot(time,Vtrace[:,2,:])
-plt.xlabel('time')
-plt.ylabel('a_ie')
+# plt.subplot(323)
+# plt.plot(time,Vtrace[:,2,:])
+# plt.xlabel('time')
+# plt.ylabel('a_ie')
 
 plt.subplot(325)
 plt.plot(freqs[:1000],spec[:1000,::4])
