@@ -38,7 +38,7 @@ Wanna contribute? (WIP)
 If you want to take part in enhancing AnarPy, we strongly suggest to download the development version of AnarPy via GitHub and pip
 The following instructions will install the version in the GitHub "development" branch -- it will include some of the latest enhancements, bug fixes, and new bugs =)
 
-1) ``git clone https://github.com/jpalma-espinosa/anarpy.git``
+1) ``git clone https://github.com/vandal-uv/anarpy.git``
 2) ``cd anarpy``
 3) ``git checkout development``
 4) ``pip install -e .``

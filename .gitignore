@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
 # C extensions
 *.so
 
@@ -22,6 +21,7 @@ parts/
 sdist/
 var/
 venv/
+
 *.egg-info/
 .installed.cfg
 *.egg
@@ -44,7 +44,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-
+*.cover
 
 # Translations
 *.mo
@@ -55,6 +55,7 @@ coverage.xml
 
 # Sphinx documentation
 
+
 docs/build/
 docs/_build/
 docs/source/generated/
@@ -62,10 +63,8 @@ docs/source/generated/
 # pytest
 .pytest_cache/
 
-
 # PyBuilder
 target/
-
 
 # DotEnv configuration
 .env
@@ -97,9 +96,9 @@ target/
 *.swo
 
 
+
 # Mypy cache
 .mypy_cache/
-
 # pycharm
 .idea/
 
@@ -108,4 +107,3 @@ target/
 
 # Ipython Notebook
 .ipynb_checkpoints
-

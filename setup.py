@@ -1,3 +1,4 @@
+
 import sys
 from os import path
 
@@ -69,4 +70,16 @@ setup(
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
     ],
+
+    install_requires=[
+          'numpy',
+          'numba',
+          'scipy',
+          'matplotlib',
+          'scikit-learn',
+          'statsmodels'
+    ],
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
+    python_requires=">=3.6",
 )
