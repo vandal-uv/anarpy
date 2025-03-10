@@ -7,14 +7,11 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-<<<<<<< HEAD
-set SOURCEDIR=.
-set BUILDDIR=_build
-=======
+
 set SOURCEDIR=source
 set BUILDDIR=build
 set SPHINXPROJ=PackagingScientificPython
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+
 
 if "%1" == "" goto help
 
@@ -37,13 +34,7 @@ goto end
 
 :help
 %SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
-=======
-%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS%
-goto end
 
-:help
-%SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS%
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
 
 :end
 popd

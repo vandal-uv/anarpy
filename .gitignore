@@ -1,10 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-<<<<<<< HEAD
-=======
 *$py.class
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+
 
 # C extensions
 *.so
@@ -23,10 +21,7 @@ lib64/
 parts/
 sdist/
 var/
-<<<<<<< HEAD
-=======
 venv/
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
 *.egg-info/
 .installed.cfg
 *.egg
@@ -49,12 +44,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
-<<<<<<< HEAD
-*.cover
-=======
-*,cover
-.hypothesis/
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+
 
 # Translations
 *.mo
@@ -64,20 +54,19 @@ coverage.xml
 *.log
 
 # Sphinx documentation
-<<<<<<< HEAD
-docs/_build/
-=======
+
 docs/build/
+docs/_build/
 docs/source/generated/
 
 # pytest
 .pytest_cache/
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+
 
 # PyBuilder
 target/
 
-<<<<<<< HEAD
+
 # DotEnv configuration
 .env
 
@@ -102,21 +91,15 @@ target/
 
 # Mac OS-specific storage files
 .DS_Store
-=======
-# Editor files
-# mac
-.DS_Store
-*~
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
 
 # vim
 *.swp
 *.swo
 
-<<<<<<< HEAD
+
 # Mypy cache
 .mypy_cache/
-=======
+
 # pycharm
 .idea/
 
@@ -125,4 +108,4 @@ target/
 
 # Ipython Notebook
 .ipynb_checkpoints
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+

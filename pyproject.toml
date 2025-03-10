@@ -1,11 +1,11 @@
-<<<<<<< HEAD
+
 [build-system]
 requires = [
     "setuptools>=42",
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
-=======
+
 [tool.black]
 line-length = 115
 include = '\.pyi?$'
@@ -26,4 +26,4 @@ exclude = '''
   | tests/data
 )/
 '''
->>>>>>> 15ae086 (File and folder structure for compliance with cookiecutter)
+
