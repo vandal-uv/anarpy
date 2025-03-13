@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -19,6 +20,8 @@ lib64/
 parts/
 sdist/
 var/
+venv/
+
 *.egg-info/
 .installed.cfg
 *.egg
@@ -51,7 +54,14 @@ coverage.xml
 *.log
 
 # Sphinx documentation
+
+
+docs/build/
 docs/_build/
+docs/source/generated/
+
+# pytest
+.pytest_cache/
 
 # PyBuilder
 target/
@@ -85,5 +95,15 @@ target/
 *.swp
 *.swo
 
+
+
 # Mypy cache
 .mypy_cache/
+# pycharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Ipython Notebook
+.ipynb_checkpoints
