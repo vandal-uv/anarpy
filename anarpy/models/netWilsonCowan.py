@@ -176,7 +176,7 @@ def Sim(Var0=None,verbose=False):
             if i%downsamp==0:
                 Y_t[i//downsamp]=Var
             if t%10==0:
-                print("%g of %g s"%(t,tstop))
+                print("%g of %g ms"%(t,tstop))
             Var += dtSim*wilsonCowan(t,Var)
 
     if not verbose and D==0:

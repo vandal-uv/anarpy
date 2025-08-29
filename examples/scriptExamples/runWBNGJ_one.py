@@ -10,12 +10,12 @@ Created on Fri Jul 12 11:07:52 2019
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
-from utils import wavelets
-from utils import Networks
+import anarpy.utils.wavelets as wavelets
+import anarpy.utils.Networks as Networks
 
 #import the model
 #explore its variables using ParamsNode(), ParamsSim(), etc
-from models import WangBuszakiNetworkE_I_Ext_GJ2 as wbn
+import anarpy.models.netWangBuszakiE_I_Ext_GJ as wbn
 
 # (re)define the number of neurons
 
@@ -55,12 +55,12 @@ Pii=wbn.Pi
 Pei=wbn.Pi # I to E
 
 aleat=0.08
-EEMat=Networks.distCM(Ne,P=Pee,rnd=aleat,symmetrical=False)#,directed=True)
-IEMat=Networks.distCM(Ni,Ne,P=Pie,rnd=aleat,symmetrical=False)
+EEMat=Networks.distCM(Ne,density=Pee,rnd=aleat,symmetrical=False)#,directed=True)
+IEMat=Networks.distCM(Ni,Ne,density=Pie,rnd=aleat,symmetrical=False)
 CMe=np.r_[EEMat,IEMat]  # It's not the same as wbn.CMe
 
-IIMat=Networks.distCM(Ni,P=Pii,rnd=aleat,symmetrical=False)
-EIMat=Networks.distCM(Ne,Ni,P=Pei,rnd=aleat,symmetrical=False)
+IIMat=Networks.distCM(Ni,density=Pii,rnd=aleat,symmetrical=False)
+EIMat=Networks.distCM(Ne,Ni,density=Pei,rnd=aleat,symmetrical=False)
 
 CMi=np.r_[EIMat,IIMat]  ## It's not the same as wbn.CMi
 
