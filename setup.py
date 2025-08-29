@@ -4,8 +4,6 @@ from os import path
 
 from setuptools import find_packages, setup
 
-import versioneer
-
 # NOTE: This file must remain Python 2 compatible for the foreseeable future,
 # to ensure that we error out properly for people with outdated setuptools
 # and/or pip.
@@ -34,15 +32,8 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, "README.rst"), encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
-with open(path.join(here, "requirements.txt")) as requirements_file:
-    # Parse requirements.txt, ignoring any commented-out lines.
-    requirements = [line for line in requirements_file.read().splitlines() if not line.startswith("#")]
-
-
 setup(
     name="anarpy",
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
     description="AnarPy is a Python package to facilitate the simulation, analysis, and replication of several experiments using computational whole brain models. For more details, installation instructions, documentation, tutorials, forums, videos and more, please visit: https://anarpy.readthedocs.io",
     long_description=readme,
     author="Vandal",
@@ -63,7 +54,6 @@ setup(
             # 'path/to/data_file',
         ]
     },
-    install_requires=requirements,
     license="BSD (3-clause)",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
@@ -80,6 +70,6 @@ setup(
           'statsmodels'
     ],
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
-    python_requires=">=3.6",
+    # packages=setuptools.find_packages(where="src"),
+    # python_requires=">=3.6",
 )
